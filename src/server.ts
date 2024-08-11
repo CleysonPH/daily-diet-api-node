@@ -1,9 +1,5 @@
 import { app } from './app'
-import { env } from './env'
-
-app.get('/api/ping', () => {
-  return { message: 'pong' }
-})
+import { env } from './config/env'
 
 app
   .listen({
