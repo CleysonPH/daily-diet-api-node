@@ -20,3 +20,33 @@ export async function deleteMealByIdAndUserId(id: string, userId: string) {
     .delete(meals)
     .where(and(eq(meals.id, id), eq(meals.userId, userId)))
 }
+
+export async function getMealsByUserId(userId: string) {
+  return await db
+    .select({
+      id: meals.id,
+      name: meals.name,
+      description: meals.description,
+      datetime: meals.datetime,
+    })
+    .from(meals)
+    .where(eq(meals.userId, userId))
+}
+
+export async function getMealByIdAndUserId(id: string, userId: string) {
+  const result = await db
+    .select({
+      id: meals.id,
+      name: meals.name,
+      description: meals.description,
+      datetime: meals.datetime,
+    })
+    .from(meals)
+    .where(and(eq(meals.id, id), eq(meals.userId, userId)))
+
+  if (result.length === 0) {
+    return null
+  }
+
+  return result[0]
+}
