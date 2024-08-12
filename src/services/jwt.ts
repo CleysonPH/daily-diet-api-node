@@ -10,3 +10,8 @@ export async function createToken(subject: string): Promise<string> {
     { expiresIn: env.JWT_EXPIRES_IN },
   )
 }
+
+export function getSubject(token: string): string {
+  const decoded = jsonwebtoken.verify(token, env.JWT_SECRET)
+  return decoded.sub as string
+}
