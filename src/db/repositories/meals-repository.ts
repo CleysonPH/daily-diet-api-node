@@ -1,3 +1,4 @@
+import { and, eq } from 'drizzle-orm'
 import { db } from '../drizzle'
 import { meals } from '../schemas/meals'
 
@@ -12,4 +13,10 @@ export async function createMeal(meal: NewMeal) {
     dateTime: meals.datetime,
     userId: meals.userId,
   })
+}
+
+export async function deleteMealByIdAndUserId(id: string, userId: string) {
+  return await db
+    .delete(meals)
+    .where(and(eq(meals.id, id), eq(meals.userId, userId)))
 }

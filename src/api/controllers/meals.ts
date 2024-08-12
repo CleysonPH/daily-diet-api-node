@@ -1,7 +1,10 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { createMeal as createMealDb } from '@/db/repositories/meals-repository'
+import {
+  createMeal as createMealDb,
+  deleteMealByIdAndUserId,
+} from '@/db/repositories/meals-repository'
 
 export async function createMeal(request: FastifyRequest, reply: FastifyReply) {
   const bodySchema = z.object({
@@ -22,4 +25,16 @@ export async function createMeal(request: FastifyRequest, reply: FastifyReply) {
   })
 
   reply.status(201).send(meal)
+}
+
+export async function deleteMeal(request: FastifyRequest, reply: FastifyReply) {
+  const paramsSchema = z.object({
+    id: z.string().uuid(),
+  })
+
+  const { id } = paramsSchema.parse(request.params)
+
+  await deleteMealByIdAndUserId(id, request.user?.id ?? '')
+
+  reply.status(204).send()
 }
