@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm'
+import { and, desc, eq } from 'drizzle-orm'
 import { db } from '../drizzle'
 import { meals } from '../schemas/meals'
 
@@ -11,7 +11,7 @@ export async function createMeal(meal: NewMeal) {
     name: meals.name,
     description: meals.description,
     dateTime: meals.datetime,
-    userId: meals.userId,
+    inDiet: meals.inDiet,
   })
 }
 
@@ -27,10 +27,12 @@ export async function getMealsByUserId(userId: string) {
       id: meals.id,
       name: meals.name,
       description: meals.description,
+      inDiet: meals.inDiet,
       datetime: meals.datetime,
     })
     .from(meals)
     .where(eq(meals.userId, userId))
+    .orderBy(desc(meals.datetime))
 }
 
 export async function getMealByIdAndUserId(id: string, userId: string) {
@@ -40,6 +42,7 @@ export async function getMealByIdAndUserId(id: string, userId: string) {
       name: meals.name,
       description: meals.description,
       datetime: meals.datetime,
+      inDiet: meals.inDiet,
     })
     .from(meals)
     .where(and(eq(meals.id, id), eq(meals.userId, userId)))
@@ -65,6 +68,7 @@ export async function updateMealByIdAndUserId(
       name: meals.name,
       description: meals.description,
       datetime: meals.datetime,
+      inDiet: meals.inDiet,
     })
 
   if (result.length === 0) {

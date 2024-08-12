@@ -4,7 +4,6 @@ import { z } from 'zod'
 import {
   createMeal as createMealDb,
   deleteMealByIdAndUserId,
-  existsMealByIdAndUserId,
   getMealByIdAndUserId,
   getMealsByUserId,
   updateMealByIdAndUserId,
@@ -94,4 +93,34 @@ export async function updateMeal(request: FastifyRequest, reply: FastifyReply) {
   }
 
   reply.send(meal)
+}
+
+export async function getMealsMetrics(
+  request: FastifyRequest,
+  reply: FastifyReply,
+) {
+  const meals = await getMealsByUserId(request.user?.id ?? '')
+
+  const totalMeals = meals.length
+  const totalInDiet = meals.filter((meal) => meal.inDiet).length
+  const totalNotInDiet = totalMeals - totalInDiet
+
+  let bestSequence = 0
+  let currentSequence = 0
+
+  for (const meal of meals) {
+    if (meal.inDiet) {
+      currentSequence++
+      bestSequence = Math.max(bestSequence, currentSequence)
+    } else {
+      currentSequence = 0
+    }
+  }
+
+  reply.send({
+    totalMeals,
+    totalInDiet,
+    totalNotInDiet,
+    bestSequence,
+  })
 }

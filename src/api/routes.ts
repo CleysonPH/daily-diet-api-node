@@ -7,6 +7,7 @@ import {
   deleteMeal,
   getMeal,
   getMeals,
+  getMealsMetrics,
   updateMeal,
 } from './controllers/meals'
 import { requireAuthentication } from './middlewares/require-authentication'
@@ -29,5 +30,10 @@ export async function appRoutes(app: FastifyInstance) {
     '/api/meals/:id',
     { preHandler: [requireAuthentication] },
     updateMeal,
+  )
+  app.get(
+    '/api/meals/metrics',
+    { preHandler: [requireAuthentication] },
+    getMealsMetrics,
   )
 }
