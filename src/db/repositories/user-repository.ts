@@ -30,3 +30,9 @@ export async function getUserByEmail(email: string) {
 
   return result[0]
 }
+
+export async function existsUserByEmail(email: string) {
+  const user = await getUserByEmail(email)
+
+  return user !== null
+}

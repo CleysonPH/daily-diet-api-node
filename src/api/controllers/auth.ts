@@ -1,19 +1,28 @@
-import { createUser, getUserByEmail } from '@/db/repositories/user-repository'
+import {
+  createUser,
+  existsUserByEmail,
+  getUserByEmail,
+} from '@/db/repositories/user-repository'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import { randomUUID } from 'crypto'
 import { comparePassword, hashPassword } from '@/services/hash'
 import { createToken } from '@/services/jwt'
 import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
+import { AlreadyExistsError } from '../errors/already-exists-error'
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   const bodySchema = z.object({
     name: z.string().min(3).max(255),
-    email: z.string().email(),
+    email: z.string().email().max(255),
     password: z.string().min(8),
   })
 
   const body = bodySchema.parse(request.body)
+
+  if (await existsUserByEmail(body.email)) {
+    throw new AlreadyExistsError('Email already in use')
+  }
 
   const user = await createUser({
     id: randomUUID(),
