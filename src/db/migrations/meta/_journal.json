@@ -5,8 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1723386704010,
-      "tag": "0000_create-user-table",
+      "when": 1723485648668,
+      "tag": "0000_create-users-table",
       "breakpoints": true
     }
   ]
