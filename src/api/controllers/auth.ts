@@ -2,6 +2,7 @@ import { createUser } from '@/db/repositories/user-repository'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import { randomUUID } from 'crypto'
+import { hashPassword } from '@/services/hash'
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   const bodySchema = z.object({
@@ -16,7 +17,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     id: randomUUID(),
     name: body.name,
     email: body.email,
-    password: body.password,
+    password: await hashPassword(body.password),
   })
 
   reply.status(201).send(user)
