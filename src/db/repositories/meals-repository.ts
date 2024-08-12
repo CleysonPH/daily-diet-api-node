@@ -50,3 +50,37 @@ export async function getMealByIdAndUserId(id: string, userId: string) {
 
   return result[0]
 }
+
+export async function updateMealByIdAndUserId(
+  id: string,
+  userId: string,
+  meal: Partial<NewMeal>,
+) {
+  const result = await db
+    .update(meals)
+    .set(meal)
+    .where(and(eq(meals.id, id), eq(meals.userId, userId)))
+    .returning({
+      id: meals.id,
+      name: meals.name,
+      description: meals.description,
+      datetime: meals.datetime,
+    })
+
+  if (result.length === 0) {
+    return null
+  }
+
+  return result[0]
+}
+
+export async function existsMealByIdAndUserId(id: string, userId: string) {
+  const result = await db
+    .select({
+      id: meals.id,
+    })
+    .from(meals)
+    .where(and(eq(meals.id, id), eq(meals.userId, userId)))
+
+  return result.length > 0
+}

@@ -2,7 +2,13 @@ import { FastifyInstance } from 'fastify'
 
 import { ping } from './controllers/ping'
 import { login, register } from './controllers/auth'
-import { createMeal, deleteMeal, getMeal, getMeals } from './controllers/meals'
+import {
+  createMeal,
+  deleteMeal,
+  getMeal,
+  getMeals,
+  updateMeal,
+} from './controllers/meals'
 import { requireAuthentication } from './middlewares/require-authentication'
 
 export async function appRoutes(app: FastifyInstance) {
@@ -19,4 +25,9 @@ export async function appRoutes(app: FastifyInstance) {
     deleteMeal,
   )
   app.get('/api/meals/:id', { preHandler: [requireAuthentication] }, getMeal)
+  app.patch(
+    '/api/meals/:id',
+    { preHandler: [requireAuthentication] },
+    updateMeal,
+  )
 }
