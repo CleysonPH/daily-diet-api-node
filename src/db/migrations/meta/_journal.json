@@ -8,6 +8,13 @@
       "when": 1723485648668,
       "tag": "0000_create-users-table",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1723492425013,
+      "tag": "0001_create-meals-table",
+      "breakpoints": true
     }
   ]
 }
